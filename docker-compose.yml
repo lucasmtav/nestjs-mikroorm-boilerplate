@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16.4-alpine
+    volumes:
+      - ./postgres/db/:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password-super-secret
+      POSTGRES_DB: dev
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:8.11
+    ports:
+      - '8080:80'
+    volumes:
+      - ./postgres/pgadmin:/root/.pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'you@domain.com'
+      PGADMIN_DEFAULT_PASSWORD: 'pgadmin-password'
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    links:
+      - postgres
